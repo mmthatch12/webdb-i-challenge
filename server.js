@@ -27,7 +27,12 @@ server.get('/accounts/:id', (req, res) => {
         .where({ id })
         .first()
         .then(accounts => {
-            res.status(200).json(accounts)
+            if(accounts){
+                res.status(200).json(accounts)
+            } else {
+                return res.status(400).json({ message: "id does not exist" })
+            }
+            
         })
         .catch(error => {
             res.json({ error: 'Could not load accounts'})
@@ -60,16 +65,24 @@ server.post('/accounts', (req, res) => {
 server.put('/accounts/:id', (req, res) => {
     const accountBody = req.body
  
-
+    if(accountBody.name && accountBody.budget){
     db('accounts')
         .where('id', req.params.id)
         .update(accountBody)
         .then(count => {
-            res.status(200).json({ message: `updated ${count} record` })
+            if(count) {
+                res.status(200).json({ message: `updated ${count} record` })
+            } else {
+                return res.status(400).json({ message: "id does not exist" })
+            }
+            
         })
         .catch(error => {
             res.json(error).json({ error: "Could not update account" })
         })
+    } else {
+        return res.status(400).json({ message: "Name and budget are required" })
+    }
 })
 
 server.delete('/accounts/:id', (req, res) => {
@@ -78,13 +91,17 @@ server.delete('/accounts/:id', (req, res) => {
         .where('id', req.params.id)
         .del()
         .then(count => {
-            res.status(200).json({ message: `updated ${count} record` })
+            if(count) {
+                res.status(200).json({ message: `Deleted ${count} record` })
+            } else {
+                return res.status(400).json({ message: "id does not exist" })
+            }
+            
         })
         .catch(error => {
             res.json(error).json({ error: "Could not delete account" })
         })
 })
-
 
 
 module.exports = server;
