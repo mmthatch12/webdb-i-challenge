@@ -6,7 +6,11 @@
 
 ## Find the phone number for the supplier with the id 11
 
+    SELECT SupplierID, Phone FROM [Suppliers] WHERE SupplierID = 11
+
 ## List first 10 orders ever places, descending by the order date
+
+    SELECT * FROM [Orders] ORDER BY OrderDate desc limit 10
 
 ## Find all customers that live in London, Madrid, or Brazil
 
