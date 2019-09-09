@@ -59,10 +59,10 @@ server.post('/accounts', (req, res) => {
 
 server.put('/accounts/:id', (req, res) => {
     const accountBody = req.body
-    const { id } = req.params
+ 
 
     db('accounts')
-        .where(id)
+        .where('id', req.params.id)
         .update(accountBody)
         .then(count => {
             res.status(200).json({ message: `updated ${count} record` })
