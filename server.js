@@ -72,6 +72,19 @@ server.put('/accounts/:id', (req, res) => {
         })
 })
 
+server.delete('/accounts/:id', (req, res) => {
+    
+    db('accounts')
+        .where('id', req.params.id)
+        .del()
+        .then(count => {
+            res.status(200).json({ message: `updated ${count} record` })
+        })
+        .catch(error => {
+            res.json(error).json({ error: "Could not delete account" })
+        })
+})
+
 
 
 module.exports = server;
