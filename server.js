@@ -20,4 +20,43 @@ server.get('/accounts', (req, res) => {
         })
 })
 
+server.get('/accounts/:id', (req, res) => {
+    const {id} = req.params
+    
+    db('accounts')
+        .where({ id })
+        .first()
+        .then(accounts => {
+            res.status(200).json(accounts)
+        })
+        .catch(error => {
+            res.json({ error: 'Could not load accounts'})
+        })
+})
+
+server.post('/accounts', (req, res) => {
+    const accountBody = req.body;
+
+    if(accountBody.name && accountBody.budget){
+        db('accounts')
+        .insert(accountBody, 'id')
+        .then(([id]) => {
+            db('accounts')
+            .where({ id })
+            .first()
+            .then(accounts => {
+                res.status(200).json(accounts)
+            })
+        })
+        .catch(error => {
+            res.json({ error: 'Could not load accounts'})
+        })
+    } else {
+        return res.status(400).json({ message: "Name and budget are required" })
+    }
+    
+})
+
+
+
 module.exports = server;
